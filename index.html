@@ -454,11 +454,15 @@ h1 .name {
   </div>
 
   <script>
-   // ---- STARFIELD (simple + smooth) ----
+
+// ---- STARFIELD + WISHING STAR ----
 const canvas = document.getElementById("star-canvas");
 const ctx = canvas.getContext("2d");
 
 let W, H, stars = [];
+let shootingStar = null;
+let lastShoot = 0;
+const SHOOT_INTERVAL = 8000; // ms between chances
 
 function resizeCanvas() {
   W = canvas.width = window.innerWidth;
@@ -481,22 +485,81 @@ function createStars() {
   }
 }
 
-function drawStars() {
+function spawnShootingStar() {
+  shootingStar = {
+    x: Math.random() * (W * 0.6) + W * 0.2, // somewhere near middle
+    y: -30,
+    len: Math.random() * 120 + 80,
+    speed: Math.random() * 8 + 6,
+    alpha: 1
+  };
+}
+
+function drawStars(timestamp) {
   ctx.clearRect(0, 0, W, H);
   ctx.globalCompositeOperation = "lighter";
 
+  // normal drifting stars
   for (const s of stars) {
-    // soft glow dot
     ctx.beginPath();
     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255, 240, 210, ${s.alpha})`;
     ctx.fill();
 
-    // slow vertical drift
     s.y += s.speed;
     if (s.y > H + 5) {
       s.y = -5;
       s.x = Math.random() * W;
+    }
+  }
+
+  // timing for shooting star
+  if (!lastShoot) lastShoot = timestamp || 0;
+
+  if (timestamp && timestamp - lastShoot > SHOOT_INTERVAL && !shootingStar) {
+    // small random chance each interval so it doesn't feel too regular
+    if (Math.random() < 0.7) {
+      spawnShootingStar();
+    }
+    lastShoot = timestamp;
+  }
+
+  // draw shooting star if active
+  if (shootingStar) {
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    ctx.beginPath();
+    const tailX = shootingStar.x - shootingStar.len;
+    const tailY = shootingStar.y + shootingStar.len * 0.3;
+
+    const grad = ctx.createLinearGradient(
+      shootingStar.x,
+      shootingStar.y,
+      tailX,
+      tailY
+    );
+    grad.addColorStop(0, `rgba(255,255,255,${shootingStar.alpha})`);
+    grad.addColorStop(1, `rgba(255,255,255,0)`);
+
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+    ctx.moveTo(shootingStar.x, shootingStar.y);
+    ctx.lineTo(tailX, tailY);
+    ctx.stroke();
+
+    ctx.restore();
+
+    shootingStar.x += shootingStar.speed;
+    shootingStar.y += shootingStar.speed * 0.3;
+    shootingStar.alpha -= 0.02;
+
+    if (
+      shootingStar.alpha <= 0 ||
+      shootingStar.x > W + shootingStar.len ||
+      shootingStar.y > H + shootingStar.len
+    ) {
+      shootingStar = null;
     }
   }
 
@@ -506,7 +569,8 @@ function drawStars() {
 window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
-drawStars();
+requestAnimationFrame(drawStars);
+
     // ---- Letter toggle ----
     const openLetterBtn = document.getElementById("open-letter");
     const letterSection = document.getElementById("letter");
