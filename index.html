@@ -455,14 +455,19 @@ h1 .name {
 
   <script>
 
-// ---- STARFIELD + WISHING STAR ----
+
+// ---- STARFIELD + WISHING STAR + FALLING ASTEROID ----
 const canvas = document.getElementById("star-canvas");
 const ctx = canvas.getContext("2d");
 
 let W, H, stars = [];
 let shootingStar = null;
+let meteor = null;
 let lastShoot = 0;
-const SHOOT_INTERVAL = 8000; // ms between chances
+let lastMeteor = 0;
+
+const SHOOT_INTERVAL = 8000; // ms between shooting star chances
+const METEOR_INTERVAL = 16000; // ms between meteor chances
 
 function resizeCanvas() {
   W = canvas.width = window.innerWidth;
@@ -495,6 +500,16 @@ function spawnShootingStar() {
   };
 }
 
+function spawnMeteor() {
+  meteor = {
+    x: Math.random() * W * 0.8 + W * 0.1, // not at extreme edges
+    y: -40,
+    r: 10, // asteroid "head" size
+    speed: Math.random() * 4 + 3,
+    alpha: 1
+  };
+}
+
 function drawStars(timestamp) {
   ctx.clearRect(0, 0, W, H);
   ctx.globalCompositeOperation = "lighter";
@@ -513,23 +528,30 @@ function drawStars(timestamp) {
     }
   }
 
-  // timing for shooting star
   if (!lastShoot) lastShoot = timestamp || 0;
+  if (!lastMeteor) lastMeteor = timestamp || 0;
 
+  // shooting star timing
   if (timestamp && timestamp - lastShoot > SHOOT_INTERVAL && !shootingStar) {
-    // small random chance each interval so it doesn't feel too regular
     if (Math.random() < 0.7) {
       spawnShootingStar();
     }
     lastShoot = timestamp;
   }
 
-  // draw shooting star if active
+  // meteor timing
+  if (timestamp && timestamp - lastMeteor > METEOR_INTERVAL && !meteor) {
+    if (Math.random() < 0.6) {
+      spawnMeteor();
+    }
+    lastMeteor = timestamp;
+  }
+
+  // draw shooting star
   if (shootingStar) {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
 
-    ctx.beginPath();
     const tailX = shootingStar.x - shootingStar.len;
     const tailY = shootingStar.y + shootingStar.len * 0.3;
 
@@ -542,6 +564,7 @@ function drawStars(timestamp) {
     grad.addColorStop(0, `rgba(255,255,255,${shootingStar.alpha})`);
     grad.addColorStop(1, `rgba(255,255,255,0)`);
 
+    ctx.beginPath();
     ctx.strokeStyle = grad;
     ctx.lineWidth = 2;
     ctx.moveTo(shootingStar.x, shootingStar.y);
@@ -563,6 +586,62 @@ function drawStars(timestamp) {
     }
   }
 
+  // draw falling asteroid / meteor
+  if (meteor) {
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    // glow around head
+    const g = ctx.createRadialGradient(
+      meteor.x,
+      meteor.y,
+      0,
+      meteor.x,
+      meteor.y,
+      meteor.r * 2.2
+    );
+    g.addColorStop(0, `rgba(255,230,190,${meteor.alpha})`);
+    g.addColorStop(1, `rgba(0,0,0,0)`);
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(meteor.x, meteor.y, meteor.r * 2.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // bright core
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,245,230,${meteor.alpha})`;
+    ctx.arc(meteor.x, meteor.y, meteor.r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // vertical trail
+    ctx.beginPath();
+    const trailLen = meteor.r * 5;
+    const trailGrad = ctx.createLinearGradient(
+      meteor.x,
+      meteor.y - trailLen,
+      meteor.x,
+      meteor.y
+    );
+    trailGrad.addColorStop(0, `rgba(255,230,190,0)`);
+    trailGrad.addColorStop(1, `rgba(255,230,190,${meteor.alpha * 0.9})`);
+    ctx.strokeStyle = trailGrad;
+    ctx.lineWidth = 3;
+    ctx.moveTo(meteor.x, meteor.y - trailLen);
+    ctx.lineTo(meteor.x, meteor.y);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // move + fade
+    meteor.y += meteor.speed;
+    meteor.alpha -= 0.01;
+
+    if (meteor.y > H + meteor.r * 2 || meteor.alpha <= 0) {
+      meteor = null;
+    }
+  }
+
   requestAnimationFrame(drawStars);
 }
 
@@ -570,6 +649,7 @@ window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
 requestAnimationFrame(drawStars);
+
 
     // ---- Letter toggle ----
     const openLetterBtn = document.getElementById("open-letter");
