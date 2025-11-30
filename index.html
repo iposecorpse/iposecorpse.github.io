@@ -27,7 +27,7 @@
 
     html,
     body {
-      height: 100%;
+     min-height: 100vh;
       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
       background: radial-gradient(circle at top, #18182b 0, #020208 55%, #000 100%);
@@ -545,9 +545,9 @@
           </p>
 
           <p class="letter-sign">
-            With more feelings than I usually admit,<br />
-            <span class="highlight">– yours truly, bewakoof</span>
-          </p>
+  With more feelings than I usually admit,<br />
+  <span class="highlight">– yours truly, bewakoof</span>
+</p>
         </section>
 
         <footer>
@@ -564,7 +564,7 @@
     const ctx = canvas.getContext("2d");
 
     let width, height, stars;
-    const STAR_COUNT = 170;
+    const STAR_COUNT = 100;
 
     function resizeCanvas() {
       width = canvas.width = window.innerWidth;
@@ -578,7 +578,7 @@
           x: Math.random() * width,
           y: Math.random() * height,
           radius: Math.random() * 1.2 + 0.3,
-          speed: Math.random() * 0.6 + 0.15,
+          speed: Math.random() * 0.4 + 0.14,
           alpha: Math.random() * 0.8 + 0.2,
           comet: Math.random() < 0.08
         });
