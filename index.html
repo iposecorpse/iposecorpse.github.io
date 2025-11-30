@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Happy Birthday, Sia 🌷</title>
+  <title>Happy Birthday, Sia 🌷✨</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Google Font -->
@@ -25,30 +25,26 @@
       padding: 0;
     }
 
-    html,
-    body {
-      height: 100%;
+    html, body {
+      min-height: 100%;
       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
       background: radial-gradient(circle at top, #18182b 0, #020208 55%, #000 100%);
       color: var(--text-main);
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     body {
       display: flex;
-      align-items: center;
       justify-content: center;
     }
 
-    /* Star canvas background */
     #star-canvas {
       position: fixed;
       inset: 0;
       z-index: -1;
     }
 
-    /* Soft vignette */
     .vignette {
       position: fixed;
       inset: 0;
@@ -61,18 +57,18 @@
       z-index: 0;
     }
 
-    .container {
+    .page {
       position: relative;
       z-index: 1;
       max-width: 900px;
       width: 92%;
-      padding: 1.5rem;
+      padding: 2rem 1.2rem 2.8rem;
     }
 
     .card {
       position: relative;
       border-radius: 24px;
-      padding: 2.6rem 2.3rem 2.3rem;
+      padding: 2.4rem 2.1rem 2.1rem;
       background: linear-gradient(145deg, rgba(10, 10, 20, 0.98), rgba(6, 6, 10, 0.96));
       box-shadow:
         0 0 0 1px rgba(245, 197, 106, 0.18),
@@ -89,10 +85,10 @@
       inset: -40%;
       background: conic-gradient(
         from 220deg,
-        rgba(255, 220, 150, 0.1),
+        rgba(255, 220, 150, 0.08),
         transparent 30%,
         transparent 55%,
-        rgba(255, 220, 150, 0.12),
+        rgba(255, 220, 150, 0.1),
         transparent 75%,
         transparent
       );
@@ -120,7 +116,7 @@
       padding: 0.15rem 0.7rem;
       border-radius: 999px;
       border: 1px solid rgba(245, 197, 106, 0.35);
-      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.15), transparent 55%);
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.12), transparent 55%);
       color: var(--gold-soft);
       font-size: 0.7rem;
       letter-spacing: 0.08em;
@@ -153,11 +149,11 @@
     .sub {
       font-size: 0.92rem;
       color: var(--text-muted);
-      max-width: 480px;
+      max-width: 520px;
     }
 
     .divider {
-      margin: 1.8rem 0 1.2rem;
+      margin: 1.8rem 0 1.3rem;
       height: 1px;
       width: 100%;
       position: relative;
@@ -175,19 +171,6 @@
         transparent
       );
       opacity: 0.7;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.6rem;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-
-    .left,
-    .right {
-      flex: 1 1 260px;
     }
 
     .label {
@@ -305,7 +288,7 @@
     }
 
     .letter.visible {
-      max-height: 400px;
+      max-height: 1200px;
       opacity: 1;
       transform: translateY(0);
     }
@@ -337,10 +320,6 @@
       flex-wrap: wrap;
     }
 
-    footer span {
-      opacity: 0.9;
-    }
-
     footer strong {
       color: var(--gold-soft);
       font-weight: 500;
@@ -348,7 +327,7 @@
 
     @media (max-width: 640px) {
       .card {
-        padding: 1.9rem 1.4rem 1.7rem;
+        padding: 2rem 1.4rem 1.8rem;
         border-radius: 20px;
       }
 
@@ -372,10 +351,10 @@
   <canvas id="star-canvas"></canvas>
   <div class="vignette"></div>
 
-  <!-- Music (replace the src link with your song) -->
+  <!-- Music -->
   <audio id="bg-music" src="tumhi_dekho_na_latest.mp3" loop></audio>
 
-  <div class="container">
+  <div class="page">
     <main class="card">
       <div class="card-inner">
         <div class="pill">
@@ -385,7 +364,7 @@
 
         <h1>
           Happy Birthday,
-          <span class="name">Sia</span> 🌷
+          <span class="name">Sia 🌷</span>
         </h1>
 
         <p class="sub">
@@ -396,70 +375,64 @@
 
         <div class="divider"></div>
 
-        <div class="row">
-          <section class="left">
-            <p class="label">From</p>
-            <p class="big-line">Someone who is way too fond of you.</p>
+        <section>
+          <p class="label">From</p>
+          <p class="big-line">Someone who is way too fond of you.</p>
 
-            <p class="label" style="margin-top: 1.2rem;">For your eyes only</p>
-            <p class="big-line">
-              <span id="typed-line" class="typed"></span>
-            </p>
+          <p class="label" style="margin-top: 1.2rem;">For your eyes only</p>
+          <p class="big-line">
+            <span id="typed-line" class="typed"></span>
+          </p>
 
-            <div class="buttons">
-              <button id="open-letter" class="btn btn-primary">
-                <span class="icon">✉️</span>
-                <span>Open your letter</span>
-              </button>
+          <div class="buttons">
+            <button id="open-letter" class="btn btn-primary">
+              <span class="icon">✉️</span>
+              <span>Open your letter</span>
+            </button>
 
-              <button id="toggle-music" class="btn">
-                <span class="icon">🎵</span>
-                <span id="music-label">Play song</span>
-              </button>
-            </div>
+            <button id="toggle-music" class="btn">
+              <span class="icon">🎵</span>
+              <span id="music-label">Play song</span>
+            </button>
+          </div>
 
-            <div class="hint">
-              <span class="dot-pulse"></span>
-              <span>Tap “Play song” first for the full experience.</span>
-            </div>
-          </section>
-
-          <aside class="right">
-            <p class="label">Little facts</p>
-            <p class="big-line">
-              · Your smile has main-character energy. <br />
-              · Your timing in my life was suspiciously perfect. <br />
-              · I’m still not over it.
-            </p>
-          </aside>
-        </div>
+          <div class="hint">
+            <span class="dot-pulse"></span>
+            <span>Tap “Play song” first for the full experience.</span>
+          </div>
+        </section>
 
         <section id="letter" class="letter">
-          <!-- EDIT THIS LETTER TEXT -->
           <p>
-            On the list of things I’m grateful for this year,
-            <span class="highlight">you</span> somehow ended up much higher than
-            you’ll ever believe.
-          </p>
-          <p>
-            Thank you for the random replies, the late-night chaos, the “bewakoof”
-            comments, and every tiny moment that quietly became important to me.
-            I don’t know exactly where life is taking either of us, but I do know this:
-            I’m really, really glad our paths crossed when they did.
-          </p>
-          <p>
-            I hope this year feels lighter on your heart, kinder to your mind,
-            and overflowing with the kind of happiness you don’t have to explain to anyone.
-            You deserve soft days, loud laughs, and people who see you the way you actually are.
-          </p>
-          <p class="letter-sign">
-            With way more feelings than I usually admit,<br />
-            <span class="highlight">– Deepak</span>
-          </p>
+  I don’t know how we even ended up talking this much, but I’m honestly 
+  glad we did. You’ve been this weird mix of calm and chaos in my day — 
+  the late-night replies, the random roasting, the “bewakoof” moments… 
+  everything. And somehow it all stuck with me.
+</p>
+
+<p>
+  We’ve had good days, dumb days, confusing days — but you’re still here, 
+  and I’m still here, and that counts for something. More than I ever say.
+</p>
+
+<p>
+  I’m not trying to be dramatic or anything. I just genuinely hope this 
+  year treats you better than the last one. You deserve lighter days, 
+  real smiles, and people who don’t make life heavier for you.
+</p>
+
+<p>
+  And yeah… I’m happy I got to be a small part of your days. Even when 
+  you call me <span class="highlight">bewakoof</span> for no reason.
+</p>
+
+<p class="letter-sign">
+  – Yours truly, your <span class="highlight">bewakoof</span>
+</p>
         </section>
 
         <footer>
-          <span>Made for <strong>Sia</strong> · This link is yours.</span>
+          <span>Made for <strong>Sia 🌷</strong> · This link is yours.</span>
           <span>Designed in pure overthinking &amp; HTML.</span>
         </footer>
       </div>
@@ -472,7 +445,7 @@
     const ctx = canvas.getContext("2d");
 
     let width, height, stars;
-    const STAR_COUNT = 160;
+    const STAR_COUNT = 90; // reduced for less lag
 
     function resizeCanvas() {
       width = canvas.width = window.innerWidth;
@@ -512,7 +485,6 @@
         ctx.arc(star.x, star.y, star.radius * 2.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // trail
         ctx.beginPath();
         ctx.strokeStyle = `rgba(255, 220, 150, ${star.alpha * 0.45})`;
         ctx.moveTo(star.x, star.y);
@@ -594,3 +566,6 @@
   </script>
 </body>
 </html>
+
+
+    
