@@ -59,14 +59,14 @@
 
     .wrap{
       width:100%;
-      max-width:980px;
-      padding:0 1.25rem;
+      max-width:900px; /* slightly smaller for mobile */
+      padding:0 1.1rem;
     }
 
     .card{
       position:relative;
       border-radius:26px;
-      padding:2.6rem 2.3rem 2rem;
+      padding:2.2rem 2rem 1.9rem; /* a bit tighter so it fits better */
       background:linear-gradient(145deg,rgba(8,8,15,.98),rgba(3,3,6,.96));
       box-shadow:
         0 0 0 1px rgba(245,197,106,.18),
@@ -123,7 +123,7 @@
     }
 
     h1{
-      font-size:clamp(2.25rem,3.3vw + 1.3rem,3.4rem);
+      font-size:clamp(2.1rem,3vw + 1.2rem,3.1rem);
       line-height:1.05;
       margin:1.1rem 0 .5rem;
       letter-spacing:.03em;
@@ -138,7 +138,9 @@
     }
 
     .title-float{
-      display:inline-block;
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
       animation:titleFloat 4.8s ease-in-out infinite;
       transform-origin:center;
     }
@@ -148,13 +150,18 @@
       50%{transform:translateY(-6px);}
     }
 
-    .tulip{
+    .tulip,
+    .heart{
       display:inline-block;
-      margin-left:4px;
       font-size:1.1em;
       filter:drop-shadow(0 0 6px rgba(245,197,106,.65));
       transform-origin:bottom center;
       animation:tulipFloat 3.6s ease-in-out infinite;
+    }
+
+    .heart{
+      margin-left:2px;
+      animation-delay:.5s; /* slight offset so it doesn’t move exactly with tulip */
     }
 
     @keyframes tulipFloat{
@@ -169,7 +176,7 @@
     }
 
     .divider{
-      margin:1.9rem 0 1.3rem;
+      margin:1.7rem 0 1.2rem;
       height:1px;
       position:relative;
       background:linear-gradient(to right,transparent,rgba(250,211,131,.9),transparent);
@@ -179,7 +186,7 @@
     .row{
       display:flex;
       flex-wrap:wrap;
-      gap:1.8rem;
+      gap:1.6rem;
       align-items:flex-start;
       justify-content:space-between;
     }
@@ -213,7 +220,7 @@
       display:flex;
       flex-wrap:wrap;
       gap:.9rem;
-      margin-top:1.7rem;
+      margin-top:1.6rem;
     }
 
     .btn{
@@ -330,12 +337,12 @@
     @media (max-width:720px){
       body{align-items:flex-start;}
       .wrap{padding-top:1.6rem;}
-      .card{padding:2rem 1.4rem 1.6rem;border-radius:22px;}
-      h1{font-size:2.3rem;}
+      .card{padding:1.8rem 1.35rem 1.5rem;border-radius:22px;}
+      h1{font-size:2.05rem;}
       .row{flex-direction:column;}
       .buttons{flex-direction:column;align-items:stretch;}
       .btn{justify-content:center;}
-      .letter.visible{max-height:800px;}
+      .letter.visible{max-height:900px;}
     }
   </style>
 </head>
@@ -344,7 +351,7 @@
   <canvas id="star-canvas"></canvas>
   <div class="vignette"></div>
 
-  <!-- MUSIC (already uploaded in repo root) -->
+  <!-- MUSIC -->
   <audio id="bg-music" src="tumhi_dekho_na_latest.mp3" loop></audio>
 
   <div class="wrap">
@@ -357,12 +364,14 @@
 
         <h1>
           <span class="title-float">
-            Happy Birthday, <span class="name">Sia</span><span class="tulip">🌷</span>
+            Happy Birthday, <span class="name">Sia</span>
+            <span class="tulip">🌷</span>
+            <span class="heart">❤️</span>
           </span>
         </h1>
 
         <p class="sub">
-          Universe ko thoda side pe rakh ke, aaj ka din sirf tumhare naam. 
+          Universe ko thoda side pe rakh ke, aaj ka din sirf tumhare naam.
           This is my small, overthought web page just for you.
         </p>
 
@@ -398,7 +407,6 @@
             </div>
           </section>
 
-          <!-- Right side now empty (no "Today's agenda") but keeps spacing -->
           <aside class="right"></aside>
         </div>
 
@@ -408,7 +416,7 @@
           </p>
           <p>
             Thank you for the random replies, the late-night chaos, the reels, the “bewakoof” comments,
-            and the way you somehow make even a normal day feel a little less meh. 
+            and the way you somehow make even a normal day feel a little less meh.
             Kabhi kabhi scene thoda off bhi ho jata hai, but even then… talking to you just hits different.
           </p>
           <p>
@@ -418,7 +426,7 @@
           </p>
           <p>
             I hope this year is kinder to your mind, softer on your heart, and full of the kind of moments
-            you don’t have to explain to anyone. More peace, better sleep, less overthinking, 
+            you don’t have to explain to anyone. More peace, better sleep, less overthinking,
             more reasons to smile for no reason. You genuinely deserve that.
           </p>
           <p>
@@ -442,25 +450,28 @@
   </div>
 
   <script>
-    // ---- STARFIELD (cosmic background) ----
+    // ---- STARFIELD (lighter + less glitchy) ----
     const canvas = document.getElementById("star-canvas");
     const ctx = canvas.getContext("2d");
     let W, H, stars = [], shootingStars = [];
+    let STAR_COUNT;
 
     function resize() {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
+      STAR_COUNT = W < 768 ? 70 : 120; // fewer stars on mobile
+      createStars();
     }
 
-    function createStars(count = 140) {
+    function createStars() {
       stars = [];
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < STAR_COUNT; i++) {
         stars.push({
           x: Math.random() * W,
           y: Math.random() * H,
           r: Math.random() * 1.2 + 0.4,
           alpha: Math.random() * 0.6 + 0.2,
-          twinkleSpeed: Math.random() * 0.02 + 0.005
+          tw: Math.random() * 0.02 + 0.005
         });
       }
     }
@@ -469,8 +480,8 @@
       shootingStars.push({
         x: Math.random() * W,
         y: -20,
-        len: Math.random() * 80 + 80,
-        speed: Math.random() * 6 + 7,
+        len: Math.random() * 70 + 70,
+        speed: Math.random() * 5 + 6,
         alpha: 1
       });
     }
@@ -482,7 +493,7 @@
 
       // static stars
       for (let s of stars) {
-        s.alpha += (Math.random() - 0.5) * s.twinkleSpeed;
+        s.alpha += (Math.random() - 0.5) * s.tw;
         s.alpha = Math.max(0.2, Math.min(0.9, s.alpha));
 
         ctx.beginPath();
@@ -491,9 +502,9 @@
         ctx.fill();
       }
 
-      // shooting stars
+      // shooting stars (only on slightly bigger screens to avoid lag)
       const now = Date.now();
-      if (now - lastShoot > 2200 + Math.random() * 1800) {
+      if (W > 500 && now - lastShoot > 2600 + Math.random() * 2200) {
         spawnShootingStar();
         lastShoot = now;
       }
@@ -516,13 +527,8 @@
       requestAnimationFrame(draw);
     }
 
-    window.addEventListener("resize", () => {
-      resize();
-      createStars();
-    });
-
+    window.addEventListener("resize", resize);
     resize();
-    createStars();
     draw();
 
     // ---- Typed line ----
