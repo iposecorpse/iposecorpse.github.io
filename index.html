@@ -349,10 +349,12 @@ h1 .name {
       body{align-items:flex-start;}
       .wrap{padding-top:1.6rem;}
       .card{padding:1.8rem 1.35rem 1.5rem;border-radius:22px;}
-      h1{font-size:2.05rem;}
-      h1 {
-        white-space: nowrap;
-      }
+      /* shrink the title on mobile so emojis stop flying off-screen */
+h1 {
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+    white-space: nowrap;
+}
       .row{flex-direction:column;}
       .buttons{flex-direction:column;align-items:stretch;}
       .btn{justify-content:center;}
